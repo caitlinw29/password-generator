@@ -3,24 +3,19 @@ var generateBtn = document.querySelector("#generate");
 
 function generatePassword() {
   //options for password characters
-  var lowerABC = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
-  var upperABC = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
   var specialChar = ["\!", "\"", "\#", "\$", "\%", "\&", "\'", "\(", "\)", "\*", "\+", "\,", "\-", "\.", "\/", "\:", "\;", "\<", "\=", "\>", "\?", "\@", "\[", "\\", "\]", "\^", "\_", "\`", "\{", "\|", "\}", "\~"];
   var numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  var lowerABC = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+  var upperABC = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+
+  //Initialize confirmation variables
+  var includeSC;
+  var includeNum;
+  var includeLowABC;
+  var includeUpABC;
 
   //array placeholder for user selected number of characters
   var password = [];
-
-  // //randomize options
-  // var randomLowABC = Math.floor(Math.random() * lowerABC.length);
-  // var randomUpABC = Math.floor(Math.random() * upperABC.length);
-  // var randomSC = Math.floor(Math.random() * specialChar.length);
-  // var randomNum = Math.floor(Math.random() * numbers.length);
-
-  // var finalLowABC = lowerABC[randomLowABC];
-  // var finalUpABC = upperABC[randomUpABC];
-  // var finalSC = specialChar[randomSC];
-  // var finalNum = numbers[randomNum];
 
   //Prompt for number of characters in password
   var numberOfCharacters = prompt("How many characters would you like your password to contain? Choose between 8-128");
@@ -37,6 +32,7 @@ function generatePassword() {
   } else if (numberOfCharacters < 8 || numberOfCharacters > 128) {
         //if number is not in correct range, prompt to try again. 
         numberOfCharacters = prompt("Please choose a number between 8-128");
+
         //Need to revalidate everything
         if (numberOfCharacters === null) {
           return;
@@ -64,89 +60,72 @@ function generatePassword() {
     confirmations();
   };
 
+  //Confirmations to check for character types 
   function confirmations() {
-    var includeSC = window.confirm("Click OK to confirm including special characters.");
-    var includeNum = window.confirm("Click OK to confirm including numeric characters.");
-    var includeLowABC = window.confirm("Click OK to confirm including lowercase characters.");
-    var includeUpABC = window.confirm("Click OK to confirm including uppercase characters.");
+    includeSC = window.confirm("Click OK to confirm including special characters.");
+    includeNum = window.confirm("Click OK to confirm including numeric characters.");
+    includeLowABC = window.confirm("Click OK to confirm including lowercase characters.");
+    includeUpABC = window.confirm("Click OK to confirm including uppercase characters.");
   };
 
-  
-  
 
- 
+  //Create password array by merging character arrays with concat  
+  //includes all four types in selection
+  if (includeSC && includeNum && includeLowABC && includeUpABC) { 
+    password = specialChar.concat(numbers, lowerABC, upperABC);
 
-  
+  } //include three types in selection
+  else if (includeSC && includeNum && includeLowABC) {   
+    password = specialChar.concat(numbers, lowerABC);       
+  } else if (includeSC && includeNum && includeUpABC) {
+    password = specialChar.concat(numbers, upperABC);
+  } else if (includeSC && includeUpABC && includeLowABC) {
+    password = specialChar.concat(lowerABC, upperABC);
+  } else if (includeNum && includeUpABC && includeLowABC) {
+    password = numbers.concat(lowerABC, upperABC);
 
-    //includes all four types
-    if (includeSC && includeNum && includeLowABC && includeUpABC) {
-      password.push(finalSC);
-      password.push(finalNum); 
-      password.push(finalLowABC); 
-      password.push(finalUpABC);
-    } //include 3 types
-      else if (includeSC && includeNum && includeLowABC) {
-        return finalNum;
-    } else if (includeSC && includeNum && includeUpABC) {
-        return finalLowABC;
-    } else if (includeSC && includeUpABC && includeLowABC) {
+  } //include two types in selection
+  else if (includeNum && includeLowABC) {
+    password = numbers.concat(lowerABC);
+  } else if (includeNum && includeUpABC) {
+    password = numbers.concat(upperABC);
+  } else if (includeNum && includeSC) {
+    password = numbers.concat(specialChar);
+  } else if (includeUpABC && includeLowABC) {
+    password = upperABC.concat(lowerABC);
+  } else if (includeUpABC && includeSC) {
+    password = upperABC.concat(specialChar);
+  } else if (includeSC && includeLowABC) {
+    password = specialChar.concat(lowerABC);
 
-    } else if (includeNum && includeUpABC && includeLowABC) {
+  } //includes one type in selection
+  else if (includeSC) {
+    password = specialChar;
+  } else if (includeNum) {
+    password = numbers;
+  } else if (includeLowABC) {
+    password = lowerABC;
+  } else if (includeUpABC) {
+    password = upperABC;
 
-    } //include 2 types
-      else if (includeNum && includeLowABC) {
+  } //If 4 negatives, prompt user to select at least one type
+  else {
+    alert("You must choose at least one type of character");
+    generatePassword();
+  };
+  
+  //Empty array for randomized password characters
+  var randomPassword = []; 
 
-    } else if (includeNum && includeUpABC) {
-      
-    } else if (includeNum && includeSC) {
-      
-    } else if (includeUpABC && includeLowABC) {
-      
-    } else if (includeUpABC && includeSC) {
-      
-    } else if (includeSC && includeLowABC) {
-      
-    } else if (includeSC) {
-
-    } else if (includeNum) {
-      
-    } else if (includeLowABC) {
-      
-    } else if (includeUpABC) {
-      
-    } else {
-      password.push("Please try again and select at least one character type.")
-    }
-  
-  
-  //Create password
-  
-
-  //Randomize password
-  //Shuffle the existing characters
-  function shuffle(password) {
-    let currentIndex = password.length, randomIndex;
-  
-    // While there remain elements to shuffle...
-    while (currentIndex != 0) {
-  
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-  
-      // And swap it with the current element.
-      [password[currentIndex], password[randomIndex]] = [
-        password[randomIndex], password[currentIndex]];
-    }
-    //Use join to take the commas away from the return
-    var noCommasPass = password.join('');
-    return noCommasPass;
+  //Randomize password from password array
+  for (var i = 0; i < numberOfCharacters; i++) {
+    var randomize = password[Math.floor(Math.random() * password.length)];
+    randomPassword.push(randomize);
+    randomNoSpacePassword = randomPassword.join("");
   }
-  
-  randomPassword = shuffle(password);
-  return randomPassword;
-}
 
+  return randomNoSpacePassword;
+};
 
 // Write password to the #password input
 function writePassword() {
@@ -155,11 +134,8 @@ function writePassword() {
 
   passwordText.value = password;
 
-}
+};
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
-
-
-
 
