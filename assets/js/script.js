@@ -113,17 +113,47 @@ function generatePassword() {
     alert("You must choose at least one type of character");
     generatePassword();
   };
-  
+
+
+  //Create Randomized Password
   //Empty array for randomized password characters
   var randomPassword = []; 
 
+  //If a character type is selected, at least one character from that type will be in the password
+  //count set to zero
+  var count = 0;
+  //if a type was selected, add one to the count and add one random character from that array to the randomPassword array
+  if (includeSC) {
+    count ++;
+    var randomSpecial = specialChar[Math.floor(Math.random() * specialChar.length)];
+    randomPassword.push(randomSpecial);
+  };
+  if (includeNum) {
+    count ++;
+    var randomNum = numbers[Math.floor(Math.random() * numbers.length)];
+    randomPassword.push(randomNum);
+  };
+  if (includeLowABC) {
+    count ++;
+    var randomLowABC = lowerABC[Math.floor(Math.random() * lowerABC.length)];
+    randomPassword.push(randomLowABC);
+  };
+  if (includeUpABC) {
+    count ++;
+    var randomUpABC = upperABC[Math.floor(Math.random() * upperABC.length)];
+    randomPassword.push(randomUpABC);
+  };
+
   //Randomize password from password array
-  for (var i = 0; i < numberOfCharacters; i++) {
+  //'numberOfCharacters - count' will account for the characters added to make sure each type is represented
+  for (var i = 0; i < numberOfCharacters - count; i++) {
     var randomize = password[Math.floor(Math.random() * password.length)];
     randomPassword.push(randomize);
+    //Join will take out the commas that separate each character
     randomNoSpacePassword = randomPassword.join("");
-  }
+  };
 
+  //returns the randomized password to be used
   return randomNoSpacePassword;
 };
 
