@@ -8,45 +8,76 @@ function generatePassword() {
   var specialChar = ["\!", "\"", "\#", "\$", "\%", "\&", "\'", "\(", "\)", "\*", "\+", "\,", "\-", "\.", "\/", "\:", "\;", "\<", "\=", "\>", "\?", "\@", "\[", "\\", "\]", "\^", "\_", "\`", "\{", "\|", "\}", "\~"];
   var numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-  //randomize options
-  var randomLowABC = Math.floor(Math.random() * lowerABC.length);
-  var randomUpABC = Math.floor(Math.random() * upperABC.length);
-  var randomSC = Math.floor(Math.random() * specialChar.length);
-  var randomNum = Math.floor(Math.random() * numbers.length);
+  //array placeholder for user selected number of characters
+  var password = [];
 
-  var finalLowABC = lowerABC[randomLowABC];
-  var finalUpABC = upperABC[randomUpABC];
-  var finalSC = specialChar[randomSC];
-  var finalNum = numbers[randomNum];
+  // //randomize options
+  // var randomLowABC = Math.floor(Math.random() * lowerABC.length);
+  // var randomUpABC = Math.floor(Math.random() * upperABC.length);
+  // var randomSC = Math.floor(Math.random() * specialChar.length);
+  // var randomNum = Math.floor(Math.random() * numbers.length);
+
+  // var finalLowABC = lowerABC[randomLowABC];
+  // var finalUpABC = upperABC[randomUpABC];
+  // var finalSC = specialChar[randomSC];
+  // var finalNum = numbers[randomNum];
 
   //Prompt for number of characters in password
   var numberOfCharacters = prompt("How many characters would you like your password to contain? Choose between 8-128");
 
-  //If user hits cancel, exit the generator
-  while (numberOfCharacters === null) {
+
+  //Validation for numberOfCharacters
+  if (numberOfCharacters === null) {
+    //If user hits cancel, exit the generator
     return;
-  }
+  } else if (!numberOfCharacters) {
+    //If user hits okay without typing anything, prompt to provide a number
+    alert("You need to input a number to make a password");
+    generatePassword();
+  } else if (numberOfCharacters < 8 || numberOfCharacters > 128) {
+        //if number is not in correct range, prompt to try again. 
+        numberOfCharacters = prompt("Please choose a number between 8-128");
+        //Need to revalidate everything
+        if (numberOfCharacters === null) {
+          return;
+        } else if (!numberOfCharacters) {
+          alert("You need to input a number to make a password");
+          generatePassword();
+        } else if (numberOfCharacters < 8 || numberOfCharacters > 128) {
+          //if number is not in correct range, prompt to try again
+            alert("You need to choose an appropriate number");
+            generatePassword();
+        } else if (lowerABC.includes(numberOfCharacters) || upperABC.includes(numberOfCharacters) || specialChar.includes(numberOfCharacters)) {
+          //If user inputs a letter or special character, provide error message.
+          alert("You need to use a number");
+          generatePassword();
+        } else {
+          //Check character types
+          confirmations();  
+        }
+  } else if (lowerABC.includes(numberOfCharacters) || upperABC.includes(numberOfCharacters) || specialChar.includes(numberOfCharacters)) {
+    //If user inputs a letter or special character, provide error message.
+    alert("You need to use a number");
+    generatePassword();
+  } else {
+    //If user inputs an appropriate number, check which character types they would like to include
+    confirmations();
+  };
 
-  //if number is not in correct range, prompt to try again
-  // if (numberOfCharacters < 8 || numberOfCharacters > 128) {
-  //   numberOfCharacters = prompt("Please choose a number between 8-128");
-  //   // window.prompt("How many characters would you like your password to contain? Choose between 8-128");
-  // } 
-  do {
-    numberOfCharacters = prompt("Please choose a number between 8-128");
-  } while (
-    numberOfCharacters < 8 || numberOfCharacters > 128
-    );
+  function confirmations() {
+    var includeSC = window.confirm("Click OK to confirm including special characters.");
+    var includeNum = window.confirm("Click OK to confirm including numeric characters.");
+    var includeLowABC = window.confirm("Click OK to confirm including lowercase characters.");
+    var includeUpABC = window.confirm("Click OK to confirm including uppercase characters.");
+  };
 
-  //Check which character types the user would like to include
-  var includeSC = window.confirm("Click OK to confirm including special characters.");
-  var includeNum = window.confirm("Click OK to confirm including numeric characters.");
-  var includeLowABC = window.confirm("Click OK to confirm including lowercase characters.");
-  var includeUpABC = window.confirm("Click OK to confirm including uppercase characters.");
+  
+  
 
-  var password = [];
+ 
 
-  function addCharacters() {
+  
+
     //includes all four types
     if (includeSC && includeNum && includeLowABC && includeUpABC) {
       password.push(finalSC);
@@ -86,14 +117,10 @@ function generatePassword() {
     } else {
       password.push("Please try again and select at least one character type.")
     }
-  }
+  
   
   //Create password
-  var i = 0;
-  do {
-     addCharacters();
-  }
-  while (password.length < numberOfCharacters);
+  
 
   //Randomize password
   //Shuffle the existing characters
