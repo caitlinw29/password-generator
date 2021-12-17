@@ -9,8 +9,7 @@ var includeSC;
 var includeNum;
 var includeLowABC;
 var includeUpABC;
-//array placeholder for user selected number of characters
-var password = [];
+
 
 //Confirmations to check for character types 
 function confirmations() {
@@ -21,6 +20,8 @@ function confirmations() {
 };
 
 function generatePassword() {
+  //array placeholder for user selected number of characters
+  var password = [];
   //Prompt for number of characters in password
   var numberOfCharacters = prompt("How many characters would you like your password to contain? Choose between 8-128");
 
@@ -45,79 +46,43 @@ function generatePassword() {
     confirmations();
   };
 
-  //Create password array by merging character arrays with concat  
-  //includes all four types in selection
-  if (includeSC && includeNum && includeLowABC && includeUpABC) { 
-    password = specialChar.concat(numbers, lowerABC, upperABC);
-
-  } //include three types in selection
-  else if (includeSC && includeNum && includeLowABC) {   
-    password = specialChar.concat(numbers, lowerABC);       
-  } else if (includeSC && includeNum && includeUpABC) {
-    password = specialChar.concat(numbers, upperABC);
-  } else if (includeSC && includeUpABC && includeLowABC) {
-    password = specialChar.concat(lowerABC, upperABC);
-  } else if (includeNum && includeUpABC && includeLowABC) {
-    password = numbers.concat(lowerABC, upperABC);
-
-  } //include two types in selection
-  else if (includeNum && includeLowABC) {
-    password = numbers.concat(lowerABC);
-  } else if (includeNum && includeUpABC) {
-    password = numbers.concat(upperABC);
-  } else if (includeNum && includeSC) {
-    password = numbers.concat(specialChar);
-  } else if (includeUpABC && includeLowABC) {
-    password = upperABC.concat(lowerABC);
-  } else if (includeUpABC && includeSC) {
-    password = upperABC.concat(specialChar);
-  } else if (includeSC && includeLowABC) {
-    password = specialChar.concat(lowerABC);
-
-  } //includes one type in selection
-  else if (includeSC) {
-    password = specialChar;
-  } else if (includeNum) {
-    password = numbers;
-  } else if (includeLowABC) {
-    password = lowerABC;
-  } else if (includeUpABC) {
-    password = upperABC;
-
-  } //If 4 negatives, prompt user to select at least one type
-  else {
-    alert("You must choose at least one type of character");
-    return;
-  };
-
   //Create Randomized Password
   //Empty array for randomized password characters
   var randomPassword = []; 
-
-  //If a character type is selected, at least one character from that type will be in the password
   //count set to zero
   var count = 0;
   //if a type was selected, add one to the count and add one random character from that array to the randomPassword array
   if (includeSC) {
     count ++;
+     //If a character type is selected, at least one character from that type will be in the password
     var randomSpecial = specialChar[Math.floor(Math.random() * specialChar.length)];
     randomPassword.push(randomSpecial);
-  };
+    //push the character type into the password array
+    password.push(...specialChar);
+  }
   if (includeNum) {
     count ++;
     var randomNum = numbers[Math.floor(Math.random() * numbers.length)];
     randomPassword.push(randomNum);
-  };
+    password.push(...numbers);
+  }
   if (includeLowABC) {
     count ++;
     var randomLowABC = lowerABC[Math.floor(Math.random() * lowerABC.length)];
     randomPassword.push(randomLowABC);
-  };
+    password.push(...lowerABC);
+  }
   if (includeUpABC) {
     count ++;
     var randomUpABC = upperABC[Math.floor(Math.random() * upperABC.length)];
     randomPassword.push(randomUpABC);
-  };
+    password.push(...upperABC);
+  }
+  //if no choice, alert to choose at least one character type
+  if (!includeUpABC && !includeLowABC && !includeNum && !includeSC) {
+    alert("You must choose at least one type of character");
+    return;
+  }
 
   //Randomize password from password array
   //'numberOfCharacters - count' will account for the characters added to make sure each type is represented
@@ -127,7 +92,7 @@ function generatePassword() {
     //Join will take out the commas that separate each character
     randomNoSpacePassword = randomPassword.join("");
   };
-
+  
   //returns the randomized password to be used
   return randomNoSpacePassword;
 };
@@ -136,9 +101,7 @@ function generatePassword() {
 function writePassword() {
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
-
   passwordText.value = password;
-
 };
 
 // Add event listener to "generate" button
